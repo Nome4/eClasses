@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <style>
+      .fc{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .fr{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      .fc2{
+        display: flex;
+        flex-direction: column;
+      }
+      .pg{
+        width: 128px;
+      }
+      .nome{
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+      .av{
+        margin-left:-5px;
+        padding-left:5px;
+      }
+      .av img{
+        width:22px;
+        position: relative;
+        z-index: 1;
+        display: block;
+      }
+      .av>div{
+        position: relative;
+      }
+      .av>div{
+        margin-right: 4px;
+      }
+      .av>div>div{
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left:0;
+        background-color: #ffff00;
+      }
+      .nprof{
+        margin-right:10px;
+      }
+      .numAval{
+        margin-left: 6px;
+        font-size: 14px;
+      }
+      .local{
+        height:22px;
+      }
+      .desc{
+        text-align: center;
+      }
+      .ap{
+        margin-bottom:41px;
+      }
+      .ap>*{
+        max-width: 490px;
+      }
+      .ap hr{
+        width:100%;
+        margin-top:27px;
+        margin-bottom:27px;
+      }
+      .ap p,.ap button{
+        margin:0;
+      }
+
+      .coment .pfp{
+        width:64px;
+        margin-right:20px;
+      }
+      #seuCom textarea{
+        resize: vertical;
+        max-width: 600px;
+        height:121px;
+        padding: 0px 4px;
+        margin-top: 18px;
+      }
+      #coms>:not(:last-child){
+        margin-bottom:36px;
+      }
+      #coms p{
+        margin-top:14px;
+        margin-bottom: 0;
+      }
+      .coment h4{
+        font-size: 20px;
+        margin:0;
+      }
+      .tc{
+        margin-bottom: 10px;
+        align-items: baseline;
+      }
+      .tc span{
+        font-size: 14px;
+        margin-left: 14px;
+      }
+      .env{
+        margin: 18px 0 40px 0;
+      }
+    </style>
+
+    <title>eClasses - Cadastro de Aluno</title>
+</head>
+
+<body>
+    <header class="bg-primary">
+        <div class="container">
+            <div class="row">
+                <div class="col-11">
+                    <h2>Apresentação de Professor</h2>
+                </div>
+                <div class="col-1">
+                    <a href="index.html"><img src="img/btn-voltar.png" id="btn-voltar" class="mt-1"></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="row fc ap">
+                <div class="col-12 fc">
+                    <img src="https://i.stack.imgur.com/dr5qp.jpg" alt="h" class="pg" style="margin-bottom:24px">
+                    <h3 class="nome">Alice</h3>
+                    <p class="desc">"Dori me, interimo adapare dorime, ameno ameno latire, latiremo, ameno"</p>
+                    <hr>
+                    <div id="avProf" style="margin-bottom:15px"></div>
+                    <p style="margin-bottom: 15px">R$ 6,00/hora</p>
+                    <p class="fr">
+                      <img src="img/local.png" alt="local" class="local">&nbsp;
+                      Pintópolis, MG
+                    </p>
+                    <hr>
+                    <button class="btn btn-primary">Conversar</button>
+                </div>
+            </div>
+            <hr style="margin-bottom: 37px">
+            <h3 style="margin-bottom: 32px">Comentários</h3>
+            <div id="seuCom" class="coment"></div>
+            <button class="btn btn-primary env">Enviar</button>
+            <div id="coms" class="coment"></div>
+        </div>
+    </main>
+
+    <footer class="bg-secondary">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <b>Desenvolvido por:</b>
+                    <p>Matheus Guimarães | Pedro Augusto Gandra | Pedro Henrique Pereira | Samuel Pedro Fernandes |
+                        Thiago Lepesqueur | Vitor Fitzherbert</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="lib/jquery/jquery-3.5.1.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+
+    <script>
+      const w=22; // Largura da estrela
+      const aj=1/5;
+      const me=4; // Margem entre estrelas
+
+      function setAv(el,x){
+        if(el.nota){
+          let arr=Math.round(x*10)/10;
+          if(arr%1==0){
+            arr+=".0";
+          }
+          el.nota.innerHTML=arr;
+        }
+
+        let pi=Math.floor(x);
+        let pd=x-pi;
+        let i=0;
+        for(; i<pi; i++){
+          setEst(el.ests[i],1);
+        }
+
+        if(i<5){
+          setEst(el.ests[i],pd);
+          i++;
+          for(; i<5; i++){
+            setEst(el.ests[i],0);
+          }
+        }
+      }
+
+      function setEst(est,qtd){
+        let w2;
+        if(qtd==0){
+          w2=0;
+        }
+        else if(qtd==1){
+          w2=w;
+        }
+        else{
+          w2=w*aj+qtd*w*(1-2*aj);
+        }
+        est.style.width=w2+"px";
+      }
+
+      function makeAv(ret,x=0,nota=false,num=-1,edit=false){
+        ret.className="fr";
+        let av=document.createElement("div");
+        av.className="av fr";
+
+        ret.ests=[];
+        for(let i=0; i<5; i++){
+          let d=document.createElement("div");
+          let img=document.createElement("img");
+          img.src="img/est.png";
+          d.appendChild(img);
+          ret.ests[i]=document.createElement("div");
+          d.appendChild(ret.ests[i]);
+          av.appendChild(d);
+        }
+
+        if(nota){
+          ret.nota=document.createElement("strong");
+          ret.nota.className="nprof";
+          ret.appendChild(ret.nota);
+        }
+        ret.appendChild(av);
+        if(num!=-1){
+          let sn=document.createElement("span");
+          sn.className="numAval";
+          ret.appendChild(sn);
+          sn.appendChild(document.createTextNode("("));
+          ret.num=document.createElement("span");
+          ret.num.innerHTML=num;
+          sn.appendChild(ret.num);
+          sn.appendChild(document.createTextNode(")"));
+        }
+
+        if(edit){
+          av.addEventListener("mousemove",function (e) {
+            let x=e.pageX-av.offsetLeft-5;
+            let lt=w+me;
+            let cheias=Math.floor(x/lt);
+            let ult=x%lt;
+            setAv(ret,x<=0? 0: Math.min(cheias+(ult>w/2)/2+1/2,5));
+          });
+        }
+
+        setAv(ret,x);
+      }
+
+      function makeComm(img,nome,av,txt,data){
+        let d=document.createElement("div");
+        d.className="fc2";
+
+        let r=document.createElement("div");
+        r.className="fr";
+        let im=document.createElement("img");
+        im.src=img;
+        im.className="pfp";
+        r.appendChild(im);
+
+        let c=document.createElement("div");
+        c.className="fc2";
+
+        let dnd=document.createElement("div");
+        dnd.className="fr tc";
+        let dnome=document.createElement("h4");
+        dnome.textContent=nome;
+        dnd.appendChild(dnome);
+        let ddata=document.createElement("span");
+        ddata.textContent=data;
+        dnd.appendChild(ddata);
+        c.appendChild(dnd);
+
+        let dav=document.createElement("div");
+        if(av!=-1){
+          makeAv(dav,av,false,-1,txt==null);
+        }
+        else{
+          dav.textContent="Sem avaliação";
+        }
+        c.appendChild(dav);
+        r.appendChild(c);
+        d.appendChild(r);
+
+        if(txt==null){
+          let ta=document.createElement("textarea");
+          ta.placeholder="Escreva seu comentário";
+          d.appendChild(ta);
+        }
+        else{
+          let p=document.createElement("p");
+          p.textContent=txt;
+          d.appendChild(p);
+        }
+
+        return d;
+      }
+
+      function showComm(img,nome,av,txt,data){
+        coms.appendChild(makeComm(img,nome,av,txt,data));
+      }
+
+      let ap=document.querySelector("#avProf");
+      makeAv(ap,3.4,true,61);
+
+      showComm("https://i.stack.imgur.com/dr5qp.jpg","sidas",3.5,"lorem ipsum","05/01/2021");
+      showComm("https://i.stack.imgur.com/dr5qp.jpg","sadasda",4,"dolor sit amet","02/02/2021");
+
+      const sc=document.querySelector("#seuCom");
+      sc.appendChild(makeComm("https://i.stack.imgur.com/dr5qp.jpg","Nome do usuário",0,null,"data atual"));
+    </script>
+
+</body>
+
+</html>
